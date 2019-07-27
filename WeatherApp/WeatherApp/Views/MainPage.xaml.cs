@@ -9,6 +9,8 @@ using System.Threading.Tasks;
 using WeatherApp.ViewModel;
 using Xamarin.Forms;
 
+
+//Save data to file
 namespace WeatherApp
 {
 
@@ -20,6 +22,8 @@ namespace WeatherApp
 		private string API_KEY = "100c8e6320af16d670b0bcd550ec2213";
 		private string API_BASE = "https://api.openweathermap.org/data/2.5/weather?q=";
 		private string unit = "metric";
+        //Use settings to store api key and api base
+        //Use a select drop down to select between metrics
 		private MainViewModel viewModel;
 
 		public MainPage()
@@ -36,6 +40,7 @@ namespace WeatherApp
 
 		async public void GetWeather(string place)
 		{
+            // Bind to C# object 
 			string url = API_BASE + place + "&appid=" + API_KEY + "&units=" + unit;
 			string result = "";
 			var handler = new HttpClientHandler();
