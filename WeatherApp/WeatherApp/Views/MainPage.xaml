@@ -17,6 +17,7 @@
             Text="Hello World"
             HorizontalOptions="Center"
             VerticalOptions="Start" />
+
         <Entry
             x:Name="Location"
             Text="{Binding Location}"
