@@ -23,5 +23,9 @@ namespace WeatherApp
 			this.BindingContext = viewModel = new ViewModel.MainViewModel();
         }
 
+		private void LocationsListView_ItemSelected(object sender, SelectedItemChangedEventArgs e)
+		{
+			viewModel.SelectedLocation = e.SelectedItem.ToString();
+		}
 	}
 }

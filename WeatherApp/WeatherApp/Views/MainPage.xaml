@@ -11,14 +11,23 @@
         <viewModel:MainViewModel />
     </ContentPage.BindingContext>
 
-    <StackLayout
+	<StackLayout
         Orientation="Vertical">
-        <Label
+		<Label
             Text="Hello World"
             HorizontalOptions="Center"
             VerticalOptions="Start" />
 
-        <Entry
+		<SearchBar x:Name="LocationSearchBar"
+				   Text="{Binding LocationKeyword}"
+				   />
+		
+		<ListView x:Name="LocationsListView"
+				  ItemsSource="{Binding LocationList}"
+				  IsVisible="{Binding GetListVisibility}"
+				  ItemSelected="LocationsListView_ItemSelected"/>
+
+		<Entry
             x:Name="Location"
             Text="{Binding Location}"
             Placeholder="Enter Location"
