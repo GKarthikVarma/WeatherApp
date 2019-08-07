@@ -27,6 +27,7 @@ namespace WeatherApp.ViewModel
                     if (value != null)
                     {
                         this._location = value;
+						OnPropertyChanged();
                     }
             }
         }
@@ -39,6 +40,14 @@ namespace WeatherApp.ViewModel
             set
             {
                 _temperature = value;
+				if(SelectedMetrics == "metric")
+				{
+					_temperature = _temperature + " C";
+				}
+				else
+				{
+					_temperature = _temperature + " F";
+				}
                 OnPropertyChanged();
             }
         }
@@ -154,10 +163,6 @@ namespace WeatherApp.ViewModel
 			}
 		}
 
-
-		//private BusinessServices.WeatherDetails _weatherDetail;
-
-
 		public BusinessServices.WeatherDetails WeatherDetails { get; set; }
 
         public Command GetWeatherCommand
@@ -169,32 +174,12 @@ namespace WeatherApp.ViewModel
                         WeatherDetails = 
                             await BusinessServices.WeatherAppApiConnect.GetWeatherDetails(Location, SelectedMetrics);
                         Temperature = WeatherDetails.currentTemp;
-						/*						if (File.Exists("WeatherApp.IOS/Resources/Weather.txt"))
-												{
-													File.Delete("WeatherApp.IOS/Resources/Weather.txt");
-													File.WriteAllText("WeatherApp.IOS/Resources/Weather.txt", Location);
-												}
-												else
-												{
-													File.WriteAllText("WeatherApp.IOS/Resources/Weather.txt", Location);
-												}*/
-/*						var path = ;
-						File.WriteAllText(path, Location);*/
-
+						var documents = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+						var filename = Path.Combine(documents, "newstory.txt");
+						File.WriteAllText(filename, Location);
 					});
             }
         }
-
-/*		public Command LocationSearchCommand
-		{
-			get
-			{
-				return new Command(async () =>
-				{
-
-				});
-			}
-		}*/
 
 		public Command GetLocationListCommand
 		{
@@ -218,14 +203,18 @@ namespace WeatherApp.ViewModel
 
 		public MainViewModel()
         {
-/*			string path = Environment.CurrentDirectory + "WeatherApp.IOS/Resources/Weather.txt";
-			if (File.Exists(path))
+			var documents = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+			var filename = Path.Combine(documents, "newstory.txt");
+			if (File.Exists(filename))
 			{
-				File.WriteAllText(path, Location);
-				Location = File.ReadAllText(path);
-				SelectedMetrics = "metric";
+				var text = File.ReadAllLines(filename);
+				foreach(var line in text)
+				{
+					this.Location = line.ToString();
+				}
+				this.SelectedMetrics = "metric";
 				this.GetWeatherCommand.Execute(null);
-			}*/
+			}
 		}
 
         public event PropertyChangedEventHandler PropertyChanged;

@@ -25,19 +25,13 @@ namespace WeatherApp.BusinessServices
 				result = await client.GetStringAsync(url);
 				Console.WriteLine(result);
 				var resultObject = JObject.Parse(result);
-				/*weather.weatherDescription = resultObject["weather"][0]["description"].ToString();
-				weather.weatherIcon = resultObject["weather"][0]["icon"].ToString();
-				weather.currentTemp = resultObject["main"]["temp"].ToString();
-				weather.placeName = resultObject["name"].ToString();
-				weather.countryName = resultObject["sys"]["country"].ToString();*/
 
 				List<string> predictions = new List<string> { };
 				string[] foo;
 				string bar;
 				foreach(var location in resultObject["predictions"])
 				{
-					bar = location["description"].ToString()/*.Split(',')*/;
-					/*bar = foo.First() + "," + foo.Last();*/
+					bar = location["description"].ToString();
 					predictions.Add(bar);
 				}
 
@@ -45,7 +39,7 @@ namespace WeatherApp.BusinessServices
 				{
 					"Invalid"
 				};
-				List<string> res = colors/*.Where(a => a.ToLower().Contains(letter.ToLower())) ?? "Test"*/;/*from c in colors where c.Contains(letter) select c;*/
+				List<string> res = colors;
 
 				return predictions;
 			}
