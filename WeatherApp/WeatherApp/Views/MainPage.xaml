@@ -1,62 +1,229 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<ContentPage
-    xmlns="http://xamarin.com/schemas/2014/forms"
-    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:d="http://xamarin.com/schemas/2014/forms/design"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:viewModel="clr-namespace:WeatherApp.ViewModel"
-    mc:Ignorable="d"
-    x:Class="WeatherApp.MainPage">
-    <ContentPage.BindingContext>
-        <viewModel:MainViewModel />
-    </ContentPage.BindingContext>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+			 xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+			 xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+			 xmlns:viewModel="clr-namespace:WeatherApp.ViewModel"
+			 mc:Ignorable="d"
+			 x:Class="WeatherApp.MainPage">
+	<ContentPage.BindingContext>
+		<viewModel:MainViewModel />
+	</ContentPage.BindingContext>
 
-	<StackLayout
-        Orientation="Vertical">
-		<Label
-            Text="Hello World"
-            HorizontalOptions="Center"
-            VerticalOptions="Start" />
+	<Grid VerticalOptions="FillAndExpand">
+		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto" />
+			<RowDefinition Height="Auto" />
+			<RowDefinition Height="Auto" />
+			<RowDefinition Height="*" />
+		</Grid.RowDefinitions>
+		<Image Source="overlay.png"
+			   Aspect="Fill"
+			   HeightRequest="300"
+			   VerticalOptions="StartAndExpand" />
 
-		<SearchBar x:Name="LocationSearchBar"
-				   Text="{Binding LocationKeyword}"
-				   />
-		
-		<ListView x:Name="LocationsListView"
-				  ItemsSource="{Binding LocationList}"
-				  IsVisible="{Binding GetListVisibility}"
-				  ItemSelected="LocationsListView_ItemSelected"/>
+		<StackLayout Orientation="Vertical"
+					 Spacing="20"
+					 HorizontalOptions="Start"
+					 VerticalOptions="Start"
+					 Margin="30,30">
 
-		<Entry
-            x:Name="Location"
-            Text="{Binding Location}"
-            Placeholder="Enter Location"
-            PlaceholderColor="Olive"
-            HorizontalOptions="Center"
-            VerticalOptions="Center" />
+			<SearchBar x:Name="LocationSearchBar"
+					   Text="{Binding LocationKeyword}" 
+					   IsEnabled="True"/>
 
-        <Picker
-            x:Name="picker"
-            Title="--Metrics--"
-            SelectedItem="{Binding SelectedMetrics}">
-            <Picker.ItemsSource>
-                <x:Array
-                    Type="{x:Type x:String}">
-                    <x:String>metric</x:String>
-                    <x:String>imperial</x:String>
-                </x:Array>
-            </Picker.ItemsSource>
-        </Picker>
+			<ListView x:Name="LocationsListView"
+					  ItemsSource="{Binding LocationList}"
+					  IsVisible="{Binding GetListVisibility}"
+					  ItemSelected="LocationsListView_ItemSelected" />
+		</StackLayout>
+		<StackLayout Orientation="Horizontal"
+					 Spacing="20"
+					 HorizontalOptions="Start"
+					 VerticalOptions="Start"
+					 Margin="120,90">
+			<Label Text="{Binding Location}"
+				   FontSize="15"
+				   VerticalOptions="Center"
+				   TextColor="White" />
+		</StackLayout>
+		<StackLayout Orientation="Horizontal"
+					 Spacing="20"
+					 HorizontalOptions="Start"
+					 VerticalOptions="Start"
+					 Margin="100,120">
+			
+			<Button Command="{Binding SetCelciusCommand}"
+					Text="Celcius"
+					FontSize="25"
+					TextColor="White" />
+			<Button Command="{Binding SetFarCommand}"
+					Text="Fahrenheit"
+					FontSize="25"
+					TextColor="White" />
 
-        <Button
-            Command="{Binding GetWeatherCommand}"
-            Text="Get Weather" />
-        <Label
-            TextColor="Aqua"
-            x:Name="Temp"
-            HorizontalOptions="Center"
-            Text="{Binding Temperature}" />
-    </StackLayout>
+		</StackLayout>
 
+		<StackLayout Orientation="Vertical"
+					 Spacing="40"
+					 HorizontalOptions="Start"
+					 VerticalOptions="Start"
+					 Margin="120,150">
+			<Button Command="{Binding GetWeatherCommand}"
+					Text="Get Weather" 
+					FontSize="25"
+					TextColor="White"/>
+		</StackLayout>
+
+
+		<Frame Grid.Row="1"
+			   HasShadow="True"
+			   CornerRadius="10"
+			   Margin="20,-110,20,0"
+			   Padding="0"
+			   HeightRequest="120"
+			   VerticalOptions="Start">
+			<StackLayout Orientation="Vertical"
+						 Margin="0,20"
+						 HorizontalOptions="Center"
+						 VerticalOptions="Center">
+				<StackLayout Orientation="Horizontal"
+							 HorizontalOptions="Center">
+					<Image Source="sun.png"
+						   WidthRequest="50"
+						   HeightRequest="50"
+						   VerticalOptions="Center" />
+					<Label Text="{Binding Temperature}"
+						   TextColor="Black"
+						   FontSize="45"
+						   FontAttributes="Bold"
+						   VerticalOptions="Center" />
+					<Label Text="{Binding WeatherDesctiption}"
+						   TextColor="Black"
+						   FontSize="16"
+						   HorizontalOptions="Center" />
+					<Label Text="{Binding GetTime}"
+						   TextColor="Black"
+						   FontSize="12"
+						   HorizontalOptions="Center" />
+				</StackLayout>
+
+			</StackLayout>
+		</Frame>
+		<Grid HorizontalOptions="FillAndExpand"
+			  Grid.Row="2"
+			  Padding="20,20,20,20"
+			  ColumnSpacing="50"
+			  VerticalOptions="CenterAndExpand">
+			<Grid.RowDefinitions>
+				<RowDefinition Height="*" />
+				<RowDefinition Height="*" />
+				<RowDefinition Height="*" />
+				<RowDefinition Height="*" />
+				<RowDefinition Height="*" />
+			</Grid.RowDefinitions>
+			<StackLayout Grid.Row="0"
+						 Orientation="Horizontal"
+						 Spacing="10"
+						 VerticalOptions="CenterAndExpand"
+						 HorizontalOptions="CenterAndExpand">
+				<Image Source="drop.png"
+					   HeightRequest="40"
+					   HorizontalOptions="Center" />
+				<StackLayout Spacing="0"
+							 HorizontalOptions="CenterAndExpand">
+					<Label Text="{Binding Humidity}"
+						   TextColor="Black"
+						   FontSize="20"
+						   FontAttributes="Bold"
+						   HorizontalOptions="Center" />
+					<Label Text="Humidity"
+						   TextColor="#7D7D7D"
+						   FontSize="11"
+						   HorizontalOptions="Center" />
+				</StackLayout>
+			</StackLayout>
+			<StackLayout Grid.Row="1"
+						 Orientation="Horizontal"
+						 Spacing="10"
+						 HorizontalOptions="CenterAndExpand">
+				<Image Source="wind.png"
+					   HeightRequest="40"
+					   HorizontalOptions="Center" />
+				<StackLayout Spacing="7"
+							 HorizontalOptions="CenterAndExpand">
+					<Label Text="{Binding WindSpeed}"
+						   TextColor="Black"
+						   FontSize="20"
+						   FontAttributes="Bold"
+						   HorizontalOptions="Center" />
+					<Label Text="Wind"
+						   TextColor="#7D7D7D"
+						   FontSize="11"
+						   HorizontalOptions="Center" />
+				</StackLayout>
+			</StackLayout>
+			<StackLayout Grid.Row="2"
+						 Orientation="Horizontal"
+						 Spacing="10"
+						 HorizontalOptions="CenterAndExpand">
+				<Image Source="pressure.png"
+					   HeightRequest="40"
+					   HorizontalOptions="Center" />
+				<StackLayout Spacing="7"
+							 HorizontalOptions="CenterAndExpand">
+					<Label Text="{Binding Pressure}"
+						   TextColor="Black"
+						   FontSize="20"
+						   FontAttributes="Bold"
+						   HorizontalOptions="Center" />
+					<Label Text="Pressure"
+						   TextColor="#7D7D7D"
+						   FontSize="11"
+						   HorizontalOptions="Center" />
+				</StackLayout>
+			</StackLayout>
+			<StackLayout Grid.Row="3"
+						 Orientation="Horizontal"
+						 Spacing="10"
+						 HorizontalOptions="CenterAndExpand">
+				<Image Source="tempmin.png"
+					   HeightRequest="40"
+					   HorizontalOptions="Center" />
+				<StackLayout Spacing="7"
+							 HorizontalOptions="CenterAndExpand">
+					<Label Text="{Binding Temp_min}"
+						   TextColor="Black"
+						   FontSize="20"
+						   FontAttributes="Bold"
+						   HorizontalOptions="Center" />
+					<Label Text="Lowest Temp"
+						   TextColor="#7D7D7D"
+						   FontSize="11"
+						   HorizontalOptions="Center" />
+				</StackLayout>
+			</StackLayout>
+			<StackLayout Grid.Row="4"
+						 Orientation="Horizontal"
+						 Spacing="10"
+						 HorizontalOptions="CenterAndExpand">
+				<Image Source="Tempmax.png"
+					   HeightRequest="40"
+					   HorizontalOptions="Center" />
+				<StackLayout Spacing="7"
+							 HorizontalOptions="CenterAndExpand">
+					<Label Text="{Binding Temp_max}"
+						   TextColor="Black"
+						   FontSize="20"
+						   FontAttributes="Bold"
+						   HorizontalOptions="Center" />
+					<Label Text="Highest Temp"
+						   TextColor="#7D7D7D"
+						   FontSize="11"
+						   HorizontalOptions="Center" />
+				</StackLayout>
+			</StackLayout>
+		</Grid>
+	</Grid>
 
 </ContentPage>

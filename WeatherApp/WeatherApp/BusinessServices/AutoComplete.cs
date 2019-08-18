@@ -1,4 +1,5 @@
 using Newtonsoft.Json.Linq;
+using Polly;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,13 +18,22 @@ namespace WeatherApp.BusinessServices
         {
 			if(letter != "")
 			{
+				var policyRetry = Policy.Handle<Exception>()
+					.OrResult<HttpResponseMessage>(re => !re.IsSuccessStatusCode)
+					.RetryAsync(2, (ex, retrycnt) =>
+					{
+						Console.WriteLine($"Retry Count {retrycnt}");
+					});
+
+				var policyBulkhead = Policy.BulkheadAsync<string>(1, 1, OnBulkheadRejectedAsync);
+
 				WeatherDetails weather = new WeatherDetails();
 				string url = API_BASE + "input=" + letter + "&types=(cities)"+"&key=" + API_KEY;
 				string result = "";
 				var handler = new HttpClientHandler();
 				HttpClient client = new HttpClient(handler);
-				result = await client.GetStringAsync(url);
-				Console.WriteLine(result);
+				result = await policyBulkhead.ExecuteAsync(async () => await client.GetStringAsync(url));
+				//Console.WriteLine(result);
 				var resultObject = JObject.Parse(result);
 
 				List<string> predictions = new List<string> { };
@@ -53,5 +63,12 @@ namespace WeatherApp.BusinessServices
 			}
 
         }
+
+		static Task OnBulkheadRejectedAsync(Context context)
+		{
+			Console.WriteLine($"Polly OnBulkheadRejectedAsync Executed");
+			return Task.CompletedTask;
+		}
+
     }
 }

@@ -32,7 +32,122 @@ namespace WeatherApp.ViewModel
             }
         }
 
-        private string _temperature;
+		private string _weatherDescription;
+
+		public string WeatherDesctiption
+		{
+			get
+			{
+				return _weatherDescription;
+			}
+			set
+			{
+				this._weatherDescription = value;
+				OnPropertyChanged();
+			}
+		}
+
+		private string _pressure;
+
+		public string Pressure
+		{
+			get
+			{
+				return this._pressure;
+			}
+			set
+			{
+				this._pressure = value;
+				OnPropertyChanged();
+			}
+		}
+
+		private string _humidity;
+
+		public string Humidity
+		{
+			get
+			{
+				return this._humidity;
+			}
+			set
+			{
+				this._humidity = value;
+				OnPropertyChanged();
+			}
+		}
+
+		private string _min;
+
+		public string Temp_min
+		{
+			get
+			{
+				return this._min;
+			}
+			set
+			{
+				this._min = value;
+				if (SelectedMetrics == "metric")
+				{
+					_min = _min + " C";
+				}
+				else
+				{
+					_min = _min + " F";
+				}
+				OnPropertyChanged();
+			}
+		}
+
+
+		private string _max;
+
+		public string Temp_max
+		{
+			get
+			{
+				return this._max;
+			}
+			set
+			{
+				this._max = value;
+				if (SelectedMetrics == "metric")
+				{
+					_max = _max + " C";
+				}
+				else
+				{
+					_max = _max + " F";
+				}
+				OnPropertyChanged();
+			}
+		}
+
+		private string _speed;
+
+		public string WindSpeed
+		{
+			get
+			{
+				return this._speed;
+			}
+			set
+			{
+				this._speed = value + " m/s";
+				OnPropertyChanged();
+			}
+		}
+
+		public string GetTime
+		{
+			get
+			{
+				return DateTime.Now.ToString("h:mm:ss tt");
+			}
+		}
+
+		private string _temperature;
 
         public string Temperature
         {
@@ -100,7 +215,7 @@ namespace WeatherApp.ViewModel
 					{
 						GetListVisibility = true;
 					}
-					else
+					else if(_locationKeyword == "")
 					{
 						GetListVisibility = false;
 					}
@@ -123,6 +238,10 @@ namespace WeatherApp.ViewModel
 			set
 			{
 				_locationList = value;
+				if(!(value.Except(new List<string> { "Invalid" }).ToList()).Any())
+				{
+					GetListVisibility = false;
+				}
 				PropertyChanged(this, new PropertyChangedEventArgs("LocationList"));
 			}
 		}
@@ -143,6 +262,7 @@ namespace WeatherApp.ViewModel
 					LocationKeyword = _selectedLocation;
 					Location = LocationKeyword;
 					_selectedLocation = null;
+					this.GetListVisibility = false;
 					OnPropertyChanged();
 				}
 			}
@@ -174,12 +294,40 @@ namespace WeatherApp.ViewModel
                         WeatherDetails = 
                             await BusinessServices.WeatherAppApiConnect.GetWeatherDetails(Location, SelectedMetrics);
                         Temperature = WeatherDetails.currentTemp;
+						WeatherDesctiption = WeatherDetails.weatherDescription;
+						Pressure = WeatherDetails.pressure;
+						Humidity = WeatherDetails.humidity;
+						Temp_min = WeatherDetails.temp_min;
+						Temp_max = WeatherDetails.temp_max;
+						WindSpeed = WeatherDetails.wind_speed;
 						var documents = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
 						var filename = Path.Combine(documents, "newstory.txt");
 						File.WriteAllText(filename, Location);
 					});
             }
         }
+
+		public Command SetCelciusCommand
+		{
+			get
+			{
+				return new Command(async () =>
+				{
+					this.SelectedMetrics = "metric";
+				});
+			}
+		}
+
+		public Command SetFarCommand
+		{
+			get
+			{
+				return new Command(async () =>
+				{
+					this.SelectedMetrics = "imperial";
+				});
+			}
+		}
 
 		public Command GetLocationListCommand
 		{

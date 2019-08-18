@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Text;
@@ -26,7 +26,12 @@ namespace WeatherApp.BusinessServices
             weather.weatherDescription = resultObject["weather"][0]["description"].ToString();
             weather.weatherIcon = resultObject["weather"][0]["icon"].ToString();
             weather.currentTemp = resultObject["main"]["temp"].ToString();
+			weather.humidity = resultObject["main"]["humidity"].ToString();
+			weather.pressure = resultObject["main"]["pressure"].ToString();
+			weather.temp_min = resultObject["main"]["temp_min"].ToString();
+			weather.temp_max = resultObject["main"]["temp_max"].ToString();
             weather.placeName = resultObject["name"].ToString();
+			weather.wind_speed = resultObject["wind"]["speed"].ToString();
             weather.countryName = resultObject["sys"]["country"].ToString();
             return weather;
         }
